@@ -1,10 +1,16 @@
 package com.github.chrisime
 
-import io.micronaut.runtime.Micronaut.*
+import io.micronaut.runtime.mapError
+import io.micronaut.runtime.startApplication
+
+object Application
+
 fun main(args: Array<String>) {
-	build()
-	    .args(*args)
-		.packages("com.github.chrisime")
-		.start()
+
+    startApplication<Application>(*args) {
+        packages("com.github.chrisime")
+        mapError<RuntimeException> { 500 }
+    }
+    
 }
 

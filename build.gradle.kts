@@ -31,8 +31,11 @@ dependencies {
 
     implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
     implementation("io.micronaut.kotlin:micronaut-kotlin-extension-functions")
+
     implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut:micronaut-management")
     implementation("io.micronaut:micronaut-runtime")
+
     implementation("io.micronaut.rxjava3:micronaut-rxjava3:1.1.0")
 
     implementation("javax.annotation:javax.annotation-api")

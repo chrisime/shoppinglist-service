@@ -1,3 +1,23 @@
 micronaut:
   application:
     name: shoppinglist
+  http:
+    client:
+      log-level: all
+      http-version: http_2_0
+      exception-on-error-status: true
+      ssl:
+        enabled: false
+  server:
+    netty:
+      access-logger:
+        enabled: true
+
+endpoints:
+  all:
+    enabled: true
+    sensitive: false
+
+jackson:
+  property-naming-strategy: SNAKE_CASE
+  locale: de_DE

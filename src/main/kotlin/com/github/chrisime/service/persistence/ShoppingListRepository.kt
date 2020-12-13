@@ -12,9 +12,9 @@ import javax.inject.Singleton
 @Singleton
 @CacheConfig(value = ["shopping-list"])
 class ShoppingListRepository(dslContext: DSLContext) : CRUDService<ShoppingListRecord, Long, ShoppingListDomain>(dslContext) {
-    
-    fun findByIdentifier(identifier: UUID): String? {
-        return fetchOneWhere(SHOPPING_LIST.NAME) {
+
+    fun findByIdentifier(identifier: UUID): ShoppingListDomain {
+        return findOneWhere {
             SHOPPING_LIST.IDENTIFIER.eq(identifier)
         }
     }

@@ -1,6 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TABLE shopping_list
+CREATE TABLE IF NOT EXISTS shopping_list
 (
     id          bigserial,
     identifier  uuid        not null,

@@ -12,6 +12,7 @@ import io.micronaut.validation.Validated
 import java.util.*
 import javax.inject.Inject
 import javax.validation.Valid
+import kotlin.streams.toList
 
 @Validated
 @Controller("/api/v1/shopping-list")
@@ -24,12 +25,12 @@ class ShoppingListController(@Inject private val shoppingListDomainService: Shop
         }
         return ok(ShoppingListDomainDto(lst.toList()))
     }
-    
+
     @Get("/{identifier}")
     fun getByIdentifier(@QueryValue identifier: UUID) : HttpResponse<ShoppingListDomain> {
         return ok(shoppingListDomainService.findByIdentifier(identifier))
     }
-    
+
     @Post(consumes = [MediaType.APPLICATION_JSON])
     fun addItem(@Valid @Body item: ShoppingListAddItemDto): HttpResponse<Boolean> {
         val result = shoppingListDomainService.create(

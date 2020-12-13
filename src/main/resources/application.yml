@@ -1,57 +1,58 @@
 micronaut:
-  application:
-    name: shoppinglist
-  http:
-    client:
-      log-level: all
-      http-version: http_2_0
-      exception-on-error-status: true
-      ssl:
-        enabled: false
-  server:
-    netty:
-      access-logger:
-        enabled: true
-  caches:
-    shopping-list:
-      charset: UTF-8
-  router:
-    versioning:
-      enabled: true
-      parameter:
-        enabled: true
-        names: "v"
-      header:
-        enabled: true
+    application:
+        name: "shopping list service"
+    http:
+        client:
+            log-level: all
+            http-version: http_2_0
+            exception-on-error-status: true
+            ssl:
+                enabled: false
+    server:
+        netty:
+            access-logger:
+                enabled: true
+    caches:
+        shopping-list:
+            charset: UTF-8
+    router:
+        versioning:
+            enabled: true
+            parameter:
+                enabled: true
+                names: "v"
+            header:
+                enabled: true
 
 datasources:
-  default:
-    url: jdbc:postgresql://localhost/shopping_list
-    driver-class-name: org.postgresql.Driver
-    username: user
-    password: password
-    dialect: POSTGRES
-    pool-name: pg_pool
-    schema: shopping_llist
+    shopping_list:
+        url: jdbc:postgresql://localhost/shopping_list
+        driver-class-name: org.postgresql.Driver
+        username: user
+        password: password
+        dialect: POSTGRES
+        pool-name: pg_pool
+        schema: public
 
 endpoints:
-  all:
-    enabled: true
-    sensitive: false
+    all:
+        enabled: true
+        sensitive: false
 
 flyway:
-  datasources:
-    default:
-      enabled: true
+    datasources:
+        shopping_list:
+            enabled: true
+            schema: public
 
 jackson:
-  property-naming-strategy: SNAKE_CASE
-  locale: en_US
-  serialization:
-    write-dates-as-timestamps: false
-  serialization-inclusion: always
+    property-naming-strategy: SNAKE_CASE
+    locale: en_US
+    serialization:
+        write-dates-as-timestamps: false
+    serialization-inclusion: always
 
 jooq:
-  datasources:
-    default:
-      sql-dialect: 'POSTGRES'
+    datasources:
+        shopping_list:
+            sql-dialect: 'POSTGRES'

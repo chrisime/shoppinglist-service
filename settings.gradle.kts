@@ -1,1 +1,1 @@
-rootProject.name="shoppinglist"
+rootProject.name="shopping list service"

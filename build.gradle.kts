@@ -10,12 +10,11 @@ plugins {
     id("io.micronaut.application") version "1.2.0"
 
     id("nu.studer.jooq") version "5.2"
+    id("org.flywaydb.flyway") version "7.3.1"
 }
 
 version = "0.1"
 group = "com.github.chrisime"
-
-val kotlinVersion = "1.4.21"
 
 repositories {
     mavenLocal()
@@ -27,7 +26,7 @@ repositories {
 }
 
 micronaut {
-    version("2.2.1")
+    version("${properties["micronautVersion"]}")
 
     runtime("netty")
     testRuntime("kotest")
@@ -40,13 +39,13 @@ micronaut {
 }
 
 dependencies {
-    kapt(platform("io.micronaut:micronaut-bom:2.2.1"))
+    kapt(platform("io.micronaut:micronaut-bom:${properties["micronautVersion"]}"))
     kapt("io.micronaut:micronaut-inject-java")
     kapt("io.micronaut:micronaut-validation")
 
-    implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:${kotlinVersion}"))
+    implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:${properties["kotlinVersion"]}"))
 
-    implementation(platform("io.micronaut:micronaut-bom:2.2.1"))
+    implementation(platform("io.micronaut:micronaut-bom:${properties["micronautVersion"]}"))
 
     implementation("io.micronaut.cache:micronaut-cache-caffeine")
     implementation("io.micronaut.flyway:micronaut-flyway")
@@ -60,7 +59,7 @@ dependencies {
     implementation("io.micronaut:micronaut-runtime")
     implementation("io.micronaut:micronaut-validation")
 
-    implementation("xyz.chrisime:crood:0.1.0-SNAPSHOT")
+    implementation("xyz.chrisime:crood:${properties["croodVersion"]}")
 
     runtimeOnly("io.micronaut.sql:micronaut-jdbc-hikari")
     runtimeOnly("org.postgresql:postgresql")
@@ -69,26 +68,26 @@ dependencies {
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     jooqGenerator("org.postgresql:postgresql:42.2.18")
-    jooqGenerator("xyz.chrisime:crood:0.1.0-SNAPSHOT")
+    jooqGenerator("xyz.chrisime:crood:${properties["croodVersion"]}")
 
 }
 
 configurations.all {
     resolutionStrategy.dependencySubstitution {
         substitute(module("org.jooq:jooq-kotlin"))
-            .using(module("org.jooq:jooq-kotlin:3.14.4"))
+            .using(module("org.jooq:jooq-kotlin:${properties["jooqVersion"]}"))
             .withoutClassifier()
 
         substitute(module("org.jooq:jooq"))
-            .using(module("org.jooq:jooq:3.14.4"))
+            .using(module("org.jooq:jooq:${properties["jooqVersion"]}"))
             .withoutClassifier()
 
         substitute(module("org.jooq:jooq-codegen"))
-            .using(module("org.jooq:jooq-codegen:3.14.4"))
+            .using(module("org.jooq:jooq-codegen:${properties["jooqVersion"]}"))
             .withoutClassifier()
 
         substitute(module("org.jooq:jooq-meta"))
-            .using(module("org.jooq:jooq-meta:3.14.4"))
+            .using(module("org.jooq:jooq-meta:${properties["jooqVersion"]}"))
             .withoutClassifier()
     }
 }
@@ -131,11 +130,18 @@ tasks {
         }
     }
 
+}
 
+flyway {
+    url = "jdbc:postgresql://localhost/shopping_list"
+    user = "user"
+    password = "password"
+    schemas = arrayOf("public")
+    locations = arrayOf("filesystem:src/main/resources/db/migration")
 }
 
 jooq {
-    version.set("3.14.4")
+    version.set("${properties["jooqVersion"]}")
     edition.set(nu.studer.gradle.jooq.JooqEdition.OSS)
 
     configurations {
@@ -174,3 +180,6 @@ jooq {
         }
     }
 }
+
+val generateJooq by project.tasks
+generateJooq.dependsOn("flywayMigrate")

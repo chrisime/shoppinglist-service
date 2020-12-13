@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  dbpostgresql:
+    image: postgres:13.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=shopping_list
+    volumes:
+      - ./data/pg/data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - shopping_list_net
+
+networks:
+  shopping_list_net:

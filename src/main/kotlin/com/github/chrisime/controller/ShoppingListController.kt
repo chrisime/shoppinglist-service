@@ -1,35 +1,50 @@
 package com.github.chrisime.controller
 
+import com.github.chrisime.domain.ShoppingListDomain
 import com.github.chrisime.dto.ShoppingListAddItemDto
-import com.github.chrisime.dto.ShoppingListItemDto
-import io.micronaut.http.annotation.Controller
-import io.micronaut.http.annotation.Get
-import io.micronaut.http.annotation.Post
-import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.core.Single
+import com.github.chrisime.dto.ShoppingListDomainDto
+import com.github.chrisime.service.persistence.ShoppingListRepository
+import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpResponse.ok
+import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.*
+import io.micronaut.validation.Validated
 import java.util.*
+import javax.inject.Inject
+import javax.validation.Valid
 
+@Validated
 @Controller("/api/v1/shopping-list")
-class ShoppingListController {
+class ShoppingListController(@Inject private val shoppingListDomainService: ShoppingListRepository) {
 
     @Get
-    fun getShoppingList(): Flowable<ShoppingListItemDto> {
-        return Flowable.fromIterable(shoppingList)
+    fun getShoppingList(): HttpResponse<ShoppingListDomainDto> {
+        val lst = shoppingListDomainService.findAll().filter {
+            !it.isSelected
+        }
+        return ok(ShoppingListDomainDto(lst.toList()))
+    }
+    
+    @Get("/{identifier}")
+    fun getByIdentifier(@QueryValue identifier: UUID) : HttpResponse<ShoppingListDomain> {
+        return ok(shoppingListDomainService.findByIdentifier(identifier))
+    }
+    
+    @Post(consumes = [MediaType.APPLICATION_JSON])
+    fun addItem(@Valid @Body item: ShoppingListAddItemDto): HttpResponse<Boolean> {
+        val result = shoppingListDomainService.create(
+            ShoppingListDomain(
+                null,
+                UUID.randomUUID(),
+                item.name,
+                item.amount,
+                false,
+                12345,
+                1234,
+            )
+        ) > 0
+
+        return ok(result)
     }
 
-    @Post
-    fun addItem(item: ShoppingListAddItemDto): Single<Boolean> {
-        val result = shoppingList.add(ShoppingListItemDto(UUID.randomUUID(), item.name, item.amount, false))
-        
-        return Single.just(result)
-    }
-
-    companion object {
-        val shoppingList = mutableListOf(
-            ShoppingListItemDto(UUID.randomUUID(), "kaese", 1, false),
-            ShoppingListItemDto(UUID.randomUUID(), "milch", 2, false),
-            ShoppingListItemDto(UUID.randomUUID(), "muesli", 1, false),
-            ShoppingListItemDto(UUID.randomUUID(), "fleisch", 1, false)
-        )
-    }
 }

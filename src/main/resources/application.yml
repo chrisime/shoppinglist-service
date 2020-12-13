@@ -12,12 +12,46 @@ micronaut:
     netty:
       access-logger:
         enabled: true
+  caches:
+    shopping-list:
+      charset: UTF-8
+  router:
+    versioning:
+      enabled: true
+      parameter:
+        enabled: true
+        names: "v"
+      header:
+        enabled: true
+
+datasources:
+  default:
+    url: jdbc:postgresql://localhost/shopping_list
+    driver-class-name: org.postgresql.Driver
+    username: user
+    password: password
+    dialect: POSTGRES
+    pool-name: pg_pool
+    schema: shopping_llist
 
 endpoints:
   all:
     enabled: true
     sensitive: false
 
+flyway:
+  datasources:
+    default:
+      enabled: true
+
 jackson:
   property-naming-strategy: SNAKE_CASE
-  locale: de_DE
+  locale: en_US
+  serialization:
+    write-dates-as-timestamps: false
+  serialization-inclusion: always
+
+jooq:
+  datasources:
+    default:
+      sql-dialect: 'POSTGRES'

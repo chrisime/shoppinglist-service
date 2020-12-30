@@ -3,6 +3,8 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     kotlin("jvm") version "1.4.21"
 
+    idea
+
     id("org.jetbrains.kotlin.kapt") version "1.4.21"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.4.21"
 
@@ -25,13 +27,22 @@ repositories {
     }
 }
 
+idea {
+    module {
+        isDownloadSources = true
+        isDownloadJavadoc = true
+    }
+    project {
+    }
+}
+
 micronaut {
     version("${properties["micronautVersion"]}")
 
     runtime("netty")
     testRuntime("kotest")
     processing {
-        incremental(false)
+        incremental(true)
         module(project.name)
         group("${project.group}")
         annotations("com.github.chrisime.*")
@@ -156,7 +167,7 @@ jooq {
                     password = "password"
                 }
                 generator.apply {
-                    name = "xyz.chrisime.crood.codegen.DomainGenerator"
+                    name = "xyz.chrisime.crood.codegen.KDomainGenerator"
                     strategy.name = "xyz.chrisime.crood.codegen.DomainGeneratorStrategy"
                     database.apply {
                         name = "org.jooq.meta.postgres.PostgresDatabase"
@@ -165,11 +176,12 @@ jooq {
                     }
                     generate.apply {
                         isNullableAnnotation = true
-//                        isNonnullAnnotation = true
+                        isNonnullAnnotation = true
                         isValidationAnnotations = true
                         isDeprecated = false
                         isRecords = true
                         isImmutablePojos = true
+                        isRoutines = true
                     }
                     target.apply {
                         packageName = "com.github.chrisime"
@@ -183,3 +195,6 @@ jooq {
 
 val generateJooq by project.tasks
 generateJooq.dependsOn("flywayMigrate")
+
+val build by project.tasks
+build.dependsOn(generateJooq)

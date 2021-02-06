@@ -1,4 +1,3 @@
-## Feature http-client documentation
+# My little Micronaut Playground
 
-- [Micronaut Micronaut HTTP Client documentation](https://docs.micronaut.io/latest/guide/index.html#httpClient)
-
+This repository is for just trying out things with Micronaut...

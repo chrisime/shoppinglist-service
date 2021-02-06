@@ -1,12 +1,11 @@
 package com.github.chrisime.controller
 
 import com.github.chrisime.domain.ShoppingListDomain
-import com.github.chrisime.dto.ShoppingListDto
 import com.github.chrisime.dto.ShoppingListDomainDto
-import com.github.chrisime.dto.ShoppingListDeletionDto
+import com.github.chrisime.dto.ShoppingListDto
 import com.github.chrisime.dto.ShoppingListUpdateDto
+import com.github.chrisime.service.business.UserService
 import com.github.chrisime.service.persistence.ShoppingListRepository
-import com.github.chrisime.service.persistence.UserRepository
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpResponse.ok
 import io.micronaut.http.annotation.Body
@@ -27,7 +26,7 @@ import kotlin.streams.toList
 @Controller("/api/v1/shopping-list")
 class ShoppingListController(
     @Inject private val shoppingListService: ShoppingListRepository,
-    @Inject private val userRepository: UserRepository,
+    @Inject private val userService: UserService,
 ) {
 
     @Get
@@ -43,7 +42,7 @@ class ShoppingListController(
 
     @Post
     fun addItem(@Valid @Body item: ShoppingListDto): HttpResponse<Boolean> {
-        val userId = userRepository.findByUsername("chrisime").id
+        val userId = userService.findOneByUsername("chrisime").id
 
         val result = shoppingListService.create(
             ShoppingListDomain(

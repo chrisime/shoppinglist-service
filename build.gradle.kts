@@ -1,18 +1,18 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.4.21"
+    kotlin("jvm") version "1.4.30"
 
     idea
 
-    id("org.jetbrains.kotlin.kapt") version "1.4.21"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.4.21"
+    id("org.jetbrains.kotlin.kapt") version "1.4.30"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.4.30"
 
     id("com.github.johnrengelman.shadow") version "6.1.0"
-    id("io.micronaut.application") version "1.2.0"
+    id("io.micronaut.application") version "1.3.3"
 
     id("nu.studer.jooq") version "5.2"
-    id("org.flywaydb.flyway") version "7.3.1"
+    id("org.flywaydb.flyway") version "7.5.2"
 }
 
 version = "0.1"
@@ -56,11 +56,12 @@ dependencies {
 
     implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:${properties["kotlinVersion"]}"))
 
+    implementation(platform("com.fasterxml.jackson:jackson-bom:${properties["jacksonVersion"]}"))
+
     implementation(platform("io.micronaut:micronaut-bom:${properties["micronautVersion"]}"))
 
     implementation("io.micronaut.cache:micronaut-cache-caffeine")
     implementation("io.micronaut.flyway:micronaut-flyway")
-    implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut:micronaut-inject-java")
     implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
     implementation("io.micronaut.kotlin:micronaut-kotlin-extension-functions")
@@ -80,7 +81,6 @@ dependencies {
 
     jooqGenerator("org.postgresql:postgresql:42.2.18")
     jooqGenerator("xyz.chrisime:crood:${properties["croodVersion"]}")
-
 }
 
 configurations.all {
